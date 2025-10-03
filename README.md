@@ -44,3 +44,9 @@ Like Asteroids, I guess...
 - OpenShot: https://www.openshot.org
 
 - Audacity:  https://www.audacityteam.org/
+
+## License
+
+This game is open source and released under the MIT License. See the [LICENSE](LICENSE) file for details.
+
+**Play it on Itch.io:** https://bitsofjeremy.itch.io/
