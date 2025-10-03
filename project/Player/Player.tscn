@@ -1,0 +1,127 @@
+[gd_scene load_steps=12 format=2]
+
+[ext_resource path="res://Player/Player.gd" type="Script" id=1]
+[ext_resource path="res://assets/images/playerShip1_blue.png" type="Texture" id=2]
+[ext_resource path="res://Bullet/Bullet.tscn" type="PackedScene" id=3]
+[ext_resource path="res://Explosion/Explosion.tscn" type="PackedScene" id=4]
+[ext_resource path="res://assets/sounds/sfx_laser2.ogg" type="AudioStream" id=5]
+[ext_resource path="res://assets/sounds/space_engine.ogg" type="AudioStream" id=6]
+
+[sub_resource type="CircleShape2D" id=1]
+radius = 38.248
+
+[sub_resource type="Curve" id=2]
+min_value = -360.0
+max_value = 360.0
+_data = [ Vector2( 0, 360 ), 0.0, 0.0, 0, 0, Vector2( 1, -355.091 ), 0.0, 0.0, 0, 0 ]
+
+[sub_resource type="Curve" id=3]
+_data = [ Vector2( 0, 0.984091 ), 0.0, 0.0, 0, 0, Vector2( 0.775862, 0 ), 0.0, 0.0, 0, 0 ]
+
+[sub_resource type="Gradient" id=4]
+offsets = PoolRealArray( 0, 0.211921 )
+colors = PoolColorArray( 1, 0, 0, 1, 0.0485458, 0.715604, 0.887695, 1 )
+
+[sub_resource type="Gradient" id=5]
+offsets = PoolRealArray( 0, 0.218543 )
+colors = PoolColorArray( 0.6698, 0.877664, 0.96875, 1, 0, 0.671875, 1, 1 )
+
+[node name="Player" type="RigidBody2D" groups=[
+"player",
+]]
+pause_mode = 1
+contacts_reported = 1
+contact_monitor = true
+angular_damp = 5.0
+script = ExtResource( 1 )
+Bullet = ExtResource( 3 )
+spin_power = 15000
+
+[node name="Sprite" type="Sprite" parent="."]
+rotation = 1.5708
+texture = ExtResource( 2 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource( 1 )
+
+[node name="Muzzle" type="Position2D" parent="."]
+position = Vector2( 0, -46 )
+
+[node name="Muzzle2" type="Position2D" parent="."]
+position = Vector2( 0, 46 )
+
+[node name="GunTimer" type="Timer" parent="."]
+one_shot = true
+autostart = true
+
+[node name="Explosion" parent="." instance=ExtResource( 4 )]
+
+[node name="InvulnerabilityTimer" type="Timer" parent="."]
+
+[node name="LaserSound" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource( 5 )
+
+[node name="EngineSound" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource( 6 )
+volume_db = -10.0
+
+[node name="Exhaust" type="CPUParticles2D" parent="."]
+position = Vector2( -40, 0 )
+rotation = 3.14159
+emitting = false
+amount = 40
+lifetime = 0.4
+fract_delta = false
+emission_shape = 2
+emission_rect_extents = Vector2( 1, 5 )
+direction = Vector2( 0, 0 )
+spread = 0.0
+gravity = Vector2( 0, 0 )
+initial_velocity = 400.0
+angular_velocity = 500.0
+angular_velocity_curve = SubResource( 2 )
+scale_amount = 8.0
+scale_amount_curve = SubResource( 3 )
+color_ramp = SubResource( 4 )
+
+[node name="LeftExhaust" type="CPUParticles2D" parent="."]
+position = Vector2( 32, -8 )
+rotation = 4.71239
+emitting = false
+amount = 10
+lifetime = 0.1
+fract_delta = false
+emission_shape = 2
+emission_rect_extents = Vector2( 1, 2.5 )
+direction = Vector2( 0, 0 )
+spread = 0.0
+gravity = Vector2( 0, 0 )
+initial_velocity = 200.0
+angular_velocity_curve = SubResource( 2 )
+scale_amount = 4.0
+scale_amount_curve = SubResource( 3 )
+color_ramp = SubResource( 5 )
+
+[node name="RightExhaust" type="CPUParticles2D" parent="."]
+position = Vector2( 32, 8 )
+rotation = 1.5708
+emitting = false
+amount = 10
+lifetime = 0.1
+fract_delta = false
+emission_shape = 2
+emission_rect_extents = Vector2( 1, 2.5 )
+direction = Vector2( 0, 0 )
+spread = 0.0
+gravity = Vector2( 0, 0 )
+initial_velocity = 200.0
+angular_velocity_curve = SubResource( 2 )
+scale_amount = 4.0
+scale_amount_curve = SubResource( 3 )
+color_ramp = SubResource( 5 )
+[connection signal="body_entered" from="." to="." method="_on_Player_body_entered"]
+[connection signal="timeout" from="GunTimer" to="." method="_on_GunTimer_timeout"]
+[connection signal="animation_finished" from="Explosion/AnimationPlayer" to="." method="_on_AnimationPlayer_animation_finished"]
+[connection signal="timeout" from="InvulnerabilityTimer" to="." method="_on_InvulnerabilityTimer_timeout"]
+
+[editable path="Explosion"]
